@@ -16,6 +16,7 @@ def run(args, *, check=True, capture=True, input_text=None):
         args,
         cwd=ROOT,
         text=True,
+        encoding='utf-8',
         input=input_text,
         capture_output=capture,
         check=False,
