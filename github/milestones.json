@@ -1,0 +1,26 @@
+[
+  {
+    "title": "M0 - Fundação e arquitetura",
+    "description": "Base técnica, convenções, configuração local e decisões que sustentam o restante do produto."
+  },
+  {
+    "title": "M1 - Catálogo e estoque",
+    "description": "Cadastro de produtos, saldo de estoque e trilha auditável de movimentações."
+  },
+  {
+    "title": "M2 - Vendas",
+    "description": "Venda transacional com múltiplos itens, validações, consultas, cancelamento e proteção contra concorrência."
+  },
+  {
+    "title": "M3 - Financeiro e indicadores",
+    "description": "Receitas, despesas, integração com vendas, fluxo de caixa e indicadores comerciais."
+  },
+  {
+    "title": "M4 - Qualidade e segurança",
+    "description": "Testes, documentação da API, observabilidade, integração contínua e controle de acesso."
+  },
+  {
+    "title": "M5 - Azure e lançamento",
+    "description": "Publicação no Azure, entrega contínua, monitoramento, apresentação de portfólio e versão 1.0.0."
+  }
+]

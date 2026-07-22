@@ -1,0 +1,102 @@
+[
+  {
+    "name": "type:feature",
+    "color": "1D76DB",
+    "description": "Nova capacidade de produto"
+  },
+  {
+    "name": "type:chore",
+    "color": "6E7781",
+    "description": "Manutenção, configuração ou organização"
+  },
+  {
+    "name": "type:docs",
+    "color": "0E8A16",
+    "description": "Documentação técnica ou de produto"
+  },
+  {
+    "name": "type:test",
+    "color": "FBCA04",
+    "description": "Testes e garantia de qualidade"
+  },
+  {
+    "name": "type:infra",
+    "color": "5319E7",
+    "description": "Infraestrutura, CI/CD e operações"
+  },
+  {
+    "name": "type:security",
+    "color": "B60205",
+    "description": "Segurança, autenticação e autorização"
+  },
+  {
+    "name": "area:foundation",
+    "color": "C5DEF5",
+    "description": "Fundação e arquitetura"
+  },
+  {
+    "name": "area:products",
+    "color": "0052CC",
+    "description": "Catálogo de produtos"
+  },
+  {
+    "name": "area:stock",
+    "color": "006B75",
+    "description": "Estoque e movimentações"
+  },
+  {
+    "name": "area:sales",
+    "color": "E99695",
+    "description": "Vendas e itens de venda"
+  },
+  {
+    "name": "area:finance",
+    "color": "2DA44E",
+    "description": "Financeiro e fluxo de caixa"
+  },
+  {
+    "name": "area:analytics",
+    "color": "D4C5F9",
+    "description": "Indicadores e relatórios"
+  },
+  {
+    "name": "area:quality",
+    "color": "FEF2C0",
+    "description": "Testes, documentação e observabilidade"
+  },
+  {
+    "name": "area:security",
+    "color": "D93F0B",
+    "description": "Segurança e controle de acesso"
+  },
+  {
+    "name": "area:azure",
+    "color": "0078D4",
+    "description": "Azure e entrega em nuvem"
+  },
+  {
+    "name": "priority:P0",
+    "color": "B60205",
+    "description": "Essencial e bloqueador do MVP"
+  },
+  {
+    "name": "priority:P1",
+    "color": "FBCA04",
+    "description": "Importante para a versão 1.0"
+  },
+  {
+    "name": "priority:P2",
+    "color": "C2E0C6",
+    "description": "Pode ser executado após o núcleo funcional"
+  },
+  {
+    "name": "good first issue",
+    "color": "7057FF",
+    "description": "Boa tarefa para iniciar no projeto"
+  },
+  {
+    "name": "blocked",
+    "color": "000000",
+    "description": "Aguardando dependência ou decisão"
+  }
+]

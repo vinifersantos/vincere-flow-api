@@ -1,0 +1,37 @@
+name: Feature
+description: Propor ou detalhar uma nova capacidade do Vincere Flow
+title: "feat: "
+labels:
+  - type:feature
+body:
+  - type: textarea
+    id: objective
+    attributes:
+      label: Objetivo
+      description: Qual problema esta issue resolve?
+    validations:
+      required: true
+  - type: textarea
+    id: scope
+    attributes:
+      label: Escopo
+      description: O que deve e o que não deve ser alterado?
+    validations:
+      required: true
+  - type: textarea
+    id: acceptance
+    attributes:
+      label: Critérios de aceite
+      description: Use itens verificáveis.
+      value: |
+        - [ ]
+        - [ ]
+    validations:
+      required: true
+  - type: textarea
+    id: validation
+    attributes:
+      label: Estratégia de validação
+      description: Testes, comandos ou evidências esperadas.
+    validations:
+      required: true

@@ -1,0 +1,920 @@
+[
+  {
+    "id": "VF-001",
+    "title": "chore: inicializar a API Vincere Flow com Spring Boot",
+    "milestone": "M0 - Fundação e arquitetura",
+    "labels": [
+      "type:chore",
+      "area:foundation",
+      "priority:P0"
+    ],
+    "objective": "Criar a base executável da API Java que receberá os módulos do Vincere Flow.",
+    "acceptance": [
+      "Projeto Maven criado com Java 21 e Spring Boot.",
+      "Package base definido como `io.github.vinifersantos.vincereflow`.",
+      "Dependências iniciais limitadas a Web, Validation, Data JPA, PostgreSQL, Flyway e Actuator.",
+      "Aplicação inicia localmente e o teste de contexto passa.",
+      "Nenhum segredo ou arquivo de IDE é versionado."
+    ],
+    "depends_on": [],
+    "notes": []
+  },
+  {
+    "id": "VF-002",
+    "title": "chore: definir arquitetura modular e convenções do repositório",
+    "milestone": "M0 - Fundação e arquitetura",
+    "labels": [
+      "type:chore",
+      "area:foundation",
+      "priority:P0"
+    ],
+    "objective": "Definir uma estrutura simples, coerente e evolutiva para evitar um projeto organizado por improviso.",
+    "acceptance": [
+      "Arquitetura registrada como monólito modular organizado por domínio.",
+      "Módulos previstos: `produto`, `estoque`, `venda`, `financeiro`, `indicador` e `shared`.",
+      "Convenções de nomes, commits, branches e pull requests documentadas.",
+      "Regras de dependência entre módulos registradas em `docs/ARCHITECTURE.md`.",
+      "Decisões arquiteturais iniciais registradas em ADR."
+    ],
+    "depends_on": [
+      "VF-001"
+    ],
+    "notes": []
+  },
+  {
+    "id": "VF-003",
+    "title": "infra: configurar PostgreSQL local com Docker Compose",
+    "milestone": "M0 - Fundação e arquitetura",
+    "labels": [
+      "type:infra",
+      "area:foundation",
+      "priority:P0",
+      "good first issue"
+    ],
+    "objective": "Disponibilizar um banco PostgreSQL reproduzível para desenvolvimento local.",
+    "acceptance": [
+      "Arquivo `compose.yaml` inicia uma instância PostgreSQL suportada.",
+      "Banco, usuário e senha locais são configurados por variáveis de ambiente com valores de desenvolvimento.",
+      "Volume nomeado preserva os dados entre reinicializações.",
+      "Health check confirma quando o banco está pronto.",
+      "README documenta os comandos para iniciar, parar e remover o ambiente."
+    ],
+    "depends_on": [
+      "VF-001"
+    ],
+    "notes": []
+  },
+  {
+    "id": "VF-004",
+    "title": "config: separar perfis local, test e prod",
+    "milestone": "M0 - Fundação e arquitetura",
+    "labels": [
+      "type:chore",
+      "area:foundation",
+      "priority:P0"
+    ],
+    "objective": "Separar configurações por ambiente sem acoplar segredos ao código.",
+    "acceptance": [
+      "Perfis `local`, `test` e `prod` possuem responsabilidades claras.",
+      "Credenciais de produção são lidas apenas de variáveis de ambiente.",
+      "Perfil de teste não depende do banco de desenvolvimento.",
+      "Configuração falha de forma explícita quando variáveis obrigatórias estão ausentes.",
+      "Arquivos `.env` reais permanecem fora do Git."
+    ],
+    "depends_on": [
+      "VF-001",
+      "VF-003"
+    ],
+    "notes": []
+  },
+  {
+    "id": "VF-005",
+    "title": "db: configurar Flyway e migration de baseline",
+    "milestone": "M0 - Fundação e arquitetura",
+    "labels": [
+      "type:infra",
+      "area:foundation",
+      "priority:P0"
+    ],
+    "objective": "Controlar a evolução do esquema do banco por migrations versionadas.",
+    "acceptance": [
+      "Flyway executa automaticamente na inicialização.",
+      "Hibernate opera com `ddl-auto=validate` fora dos testes isolados.",
+      "Migration de baseline cria extensões ou estruturas compartilhadas estritamente necessárias.",
+      "Convenção de nomes `Vn__descricao.sql` está documentada.",
+      "Aplicar a mesma migration duas vezes não produz alterações indevidas."
+    ],
+    "depends_on": [
+      "VF-003",
+      "VF-004"
+    ],
+    "notes": []
+  },
+  {
+    "id": "VF-006",
+    "title": "api: padronizar validação e tratamento global de erros",
+    "milestone": "M0 - Fundação e arquitetura",
+    "labels": [
+      "type:feature",
+      "area:foundation",
+      "priority:P0"
+    ],
+    "objective": "Garantir respostas previsíveis para entradas inválidas e falhas de regra de negócio.",
+    "acceptance": [
+      "DTOs de entrada usam Bean Validation.",
+      "Exceções de negócio são mapeadas por `@RestControllerAdvice`.",
+      "Resposta de erro possui código, mensagem, timestamp, path e detalhes de campos quando aplicável.",
+      "Status HTTP distingue validação, recurso ausente, conflito e erro interno.",
+      "Stack traces e dados sensíveis não são expostos ao cliente."
+    ],
+    "depends_on": [
+      "VF-001"
+    ],
+    "notes": []
+  },
+  {
+    "id": "VF-007",
+    "title": "docs: registrar visão do produto e escopo do MVP",
+    "milestone": "M0 - Fundação e arquitetura",
+    "labels": [
+      "type:docs",
+      "area:foundation",
+      "priority:P1",
+      "good first issue"
+    ],
+    "objective": "Transformar a ideia do produto em um escopo verificável e protegido contra expansão descontrolada.",
+    "acceptance": [
+      "Problema, público-alvo e proposta de valor estão documentados.",
+      "Fluxo principal do MVP liga produto, estoque, venda e financeiro.",
+      "Funcionalidades fora do MVP estão explicitamente listadas.",
+      "Critérios de sucesso da versão 1.0 estão definidos.",
+      "Nome, tagline e convenções da marca Vincere Flow estão registrados."
+    ],
+    "depends_on": [
+      "VF-002"
+    ],
+    "notes": []
+  },
+  {
+    "id": "VF-008",
+    "title": "feat(produtos): modelar produto e persistência",
+    "milestone": "M1 - Catálogo e estoque",
+    "labels": [
+      "type:feature",
+      "area:products",
+      "priority:P0"
+    ],
+    "objective": "Criar o modelo de produto que sustenta estoque, vendas e indicadores.",
+    "acceptance": [
+      "Produto possui id, referência, nome, marca, categoria, custo, preço de venda, estoque mínimo, status e auditoria.",
+      "Valores monetários usam `BigDecimal` com escala definida.",
+      "Referência do produto é única e normalizada.",
+      "Migration cria tabela, índices, constraints e checks necessários.",
+      "Repository possui teste de persistência para unicidade e campos obrigatórios."
+    ],
+    "depends_on": [
+      "VF-002",
+      "VF-005"
+    ],
+    "notes": []
+  },
+  {
+    "id": "VF-009",
+    "title": "feat(produtos): implementar cadastro e manutenção de produtos",
+    "milestone": "M1 - Catálogo e estoque",
+    "labels": [
+      "type:feature",
+      "area:products",
+      "priority:P0"
+    ],
+    "objective": "Permitir criar, consultar, atualizar e ativar ou inativar produtos com regras consistentes.",
+    "acceptance": [
+      "`POST /api/v1/produtos` cadastra um produto válido.",
+      "`GET /api/v1/produtos/{id}` retorna o produto ou 404.",
+      "`PUT /api/v1/produtos/{id}` atualiza apenas campos permitidos.",
+      "Ativação e inativação não apagam histórico.",
+      "Referência duplicada retorna conflito com mensagem clara.",
+      "Controllers não expõem entidades JPA diretamente."
+    ],
+    "depends_on": [
+      "VF-006",
+      "VF-008"
+    ],
+    "notes": []
+  },
+  {
+    "id": "VF-010",
+    "title": "feat(produtos): implementar busca, filtros e paginação",
+    "milestone": "M1 - Catálogo e estoque",
+    "labels": [
+      "type:feature",
+      "area:products",
+      "priority:P1"
+    ],
+    "objective": "Permitir localizar produtos com eficiência sem retornar o catálogo inteiro.",
+    "acceptance": [
+      "`GET /api/v1/produtos` suporta paginação e ordenação.",
+      "Filtros cobrem referência, nome, marca, categoria e status.",
+      "Parâmetros inválidos retornam erro de validação.",
+      "Resposta informa página, tamanho, total de elementos e total de páginas.",
+      "Consultas relevantes utilizam índices compatíveis com os filtros."
+    ],
+    "depends_on": [
+      "VF-009"
+    ],
+    "notes": []
+  },
+  {
+    "id": "VF-011",
+    "title": "feat(estoque): modelar saldo e movimentações",
+    "milestone": "M1 - Catálogo e estoque",
+    "labels": [
+      "type:feature",
+      "area:stock",
+      "priority:P0"
+    ],
+    "objective": "Representar o estoque como saldo controlado e trilha imutável de movimentações.",
+    "acceptance": [
+      "Movimentação registra produto, tipo, quantidade, data, origem, observação e auditoria.",
+      "Tipos iniciais incluem entrada, venda, ajuste, devolução, perda e estorno.",
+      "Quantidade de uma movimentação é sempre positiva; o tipo define o efeito no saldo.",
+      "Saldo não pode ficar negativo.",
+      "Migration cria constraints e índices para produto e data."
+    ],
+    "depends_on": [
+      "VF-005",
+      "VF-008"
+    ],
+    "notes": []
+  },
+  {
+    "id": "VF-012",
+    "title": "feat(estoque): registrar entradas e ajustes",
+    "milestone": "M1 - Catálogo e estoque",
+    "labels": [
+      "type:feature",
+      "area:stock",
+      "priority:P0"
+    ],
+    "objective": "Permitir aumentar ou corrigir o saldo com rastreabilidade e validação.",
+    "acceptance": [
+      "`POST /api/v1/estoque/movimentacoes` aceita entrada e ajuste autorizado.",
+      "Operação atualiza saldo e grava movimentação na mesma transação.",
+      "Produto inexistente ou inativo impede a movimentação.",
+      "Ajustes exigem motivo textual.",
+      "Falha em qualquer etapa reverte toda a operação."
+    ],
+    "depends_on": [
+      "VF-006",
+      "VF-011"
+    ],
+    "notes": []
+  },
+  {
+    "id": "VF-013",
+    "title": "feat(estoque): consultar saldo e histórico",
+    "milestone": "M1 - Catálogo e estoque",
+    "labels": [
+      "type:feature",
+      "area:stock",
+      "priority:P1"
+    ],
+    "objective": "Dar visibilidade ao saldo atual e à origem de cada alteração de estoque.",
+    "acceptance": [
+      "Endpoint retorna saldo atual por produto.",
+      "Histórico suporta filtros por produto, tipo e intervalo de datas.",
+      "Resultados são paginados e ordenados do mais recente para o mais antigo.",
+      "Cada registro identifica a origem de negócio quando existir.",
+      "Consulta não permite alteração de movimentações já gravadas."
+    ],
+    "depends_on": [
+      "VF-012"
+    ],
+    "notes": []
+  },
+  {
+    "id": "VF-014",
+    "title": "feat(estoque): listar produtos abaixo do estoque mínimo",
+    "milestone": "M1 - Catálogo e estoque",
+    "labels": [
+      "type:feature",
+      "area:stock",
+      "priority:P1",
+      "good first issue"
+    ],
+    "objective": "Sinalizar produtos que precisam de reposição.",
+    "acceptance": [
+      "Endpoint lista apenas produtos ativos cujo saldo é menor ou igual ao estoque mínimo.",
+      "Resposta inclui saldo, estoque mínimo e quantidade sugerida para reposição.",
+      "Consulta suporta paginação e ordenação por criticidade.",
+      "Cenários sem produtos críticos retornam lista vazia, não erro."
+    ],
+    "depends_on": [
+      "VF-009",
+      "VF-013"
+    ],
+    "notes": []
+  },
+  {
+    "id": "VF-015",
+    "title": "feat(vendas): modelar venda e itens",
+    "milestone": "M2 - Vendas",
+    "labels": [
+      "type:feature",
+      "area:sales",
+      "priority:P0"
+    ],
+    "objective": "Criar o agregado de venda com valores históricos independentes de alterações futuras no produto.",
+    "acceptance": [
+      "Venda possui número, data, status, subtotal, desconto, total e auditoria.",
+      "Item registra produto, quantidade, preço unitário, custo unitário e total do item.",
+      "Preço e custo são copiados para o item no momento da venda.",
+      "Venda possui ao menos um item e não aceita quantidades nulas ou negativas.",
+      "Migration garante integridade referencial e precisão monetária."
+    ],
+    "depends_on": [
+      "VF-005",
+      "VF-008"
+    ],
+    "notes": []
+  },
+  {
+    "id": "VF-016",
+    "title": "feat(vendas): registrar venda com múltiplos itens",
+    "milestone": "M2 - Vendas",
+    "labels": [
+      "type:feature",
+      "area:sales",
+      "priority:P0"
+    ],
+    "objective": "Executar o fluxo central do produto: concluir uma venda e baixar o estoque de forma atômica.",
+    "acceptance": [
+      "`POST /api/v1/vendas` aceita um ou mais itens.",
+      "Produtos e quantidades são validados antes de qualquer gravação.",
+      "Venda, itens, saldos e movimentações são persistidos na mesma transação.",
+      "Totais são calculados no servidor, não confiados ao cliente.",
+      "Resposta retorna identificação da venda, itens e totais consolidados.",
+      "Falha em um item reverte toda a venda."
+    ],
+    "depends_on": [
+      "VF-006",
+      "VF-009",
+      "VF-011",
+      "VF-015"
+    ],
+    "notes": []
+  },
+  {
+    "id": "VF-017",
+    "title": "feat(vendas): validar estoque, preços e descontos",
+    "milestone": "M2 - Vendas",
+    "labels": [
+      "type:feature",
+      "area:sales",
+      "priority:P0"
+    ],
+    "objective": "Concentrar e testar as regras que impedem vendas inconsistentes ou economicamente inválidas.",
+    "acceptance": [
+      "Venda de produto inativo ou sem estoque suficiente é recusada.",
+      "Itens duplicados são consolidados ou recusados por regra documentada.",
+      "Desconto não pode tornar o total negativo.",
+      "Limite de desconto possui regra explícita e configurável.",
+      "Arredondamento monetário usa estratégia única e documentada.",
+      "Mensagens de erro identificam o item que causou a rejeição."
+    ],
+    "depends_on": [
+      "VF-016"
+    ],
+    "notes": []
+  },
+  {
+    "id": "VF-018",
+    "title": "feat(vendas): consultar vendas e seus detalhes",
+    "milestone": "M2 - Vendas",
+    "labels": [
+      "type:feature",
+      "area:sales",
+      "priority:P1"
+    ],
+    "objective": "Permitir auditoria e análise das vendas registradas.",
+    "acceptance": [
+      "Listagem suporta período, status e paginação.",
+      "Detalhe retorna itens, totais, custos históricos e margem bruta.",
+      "Consultas evitam N+1 e carregamento desnecessário.",
+      "Intervalos de data inválidos retornam erro de validação.",
+      "Venda inexistente retorna 404."
+    ],
+    "depends_on": [
+      "VF-016",
+      "VF-017"
+    ],
+    "notes": []
+  },
+  {
+    "id": "VF-019",
+    "title": "feat(vendas): cancelar venda e estornar estoque",
+    "milestone": "M2 - Vendas",
+    "labels": [
+      "type:feature",
+      "area:sales",
+      "priority:P0"
+    ],
+    "objective": "Permitir cancelamento sem apagar histórico e devolver os itens ao estoque.",
+    "acceptance": [
+      "Venda concluída pode ser cancelada uma única vez.",
+      "Cancelamento altera status e registra data, motivo e responsável.",
+      "Cada item gera movimentação de estorno no estoque.",
+      "Operação é atômica e idempotente.",
+      "Venda cancelada permanece consultável e não pode ser editada."
+    ],
+    "depends_on": [
+      "VF-016",
+      "VF-017"
+    ],
+    "notes": []
+  },
+  {
+    "id": "VF-020",
+    "title": "feat(estoque): proteger saldo contra vendas concorrentes",
+    "milestone": "M2 - Vendas",
+    "labels": [
+      "type:feature",
+      "area:stock",
+      "priority:P1"
+    ],
+    "objective": "Evitar estoque negativo quando duas vendas tentam consumir o mesmo saldo simultaneamente.",
+    "acceptance": [
+      "Estratégia de concorrência é documentada e implementada.",
+      "Conflitos retornam erro tratável sem corromper o saldo.",
+      "Teste reproduz duas transações concorrentes sobre o mesmo produto.",
+      "Saldo final e movimentações permanecem consistentes.",
+      "Mecanismo escolhido não bloqueia todo o catálogo desnecessariamente."
+    ],
+    "depends_on": [
+      "VF-016"
+    ],
+    "notes": []
+  },
+  {
+    "id": "VF-021",
+    "title": "feat(financeiro): modelar categorias e lançamentos",
+    "milestone": "M3 - Financeiro e indicadores",
+    "labels": [
+      "type:feature",
+      "area:finance",
+      "priority:P0"
+    ],
+    "objective": "Criar a base financeira para receitas, despesas, pagamentos e estornos.",
+    "acceptance": [
+      "Categoria possui nome, tipo permitido, status e auditoria.",
+      "Lançamento possui tipo, origem, descrição, categoria, valor, competência, vencimento, pagamento e status.",
+      "Valores usam `BigDecimal` e devem ser positivos.",
+      "Origem identifica lançamento manual, venda ou estorno.",
+      "Migration cria constraints e índices para período, tipo e status."
+    ],
+    "depends_on": [
+      "VF-005",
+      "VF-002"
+    ],
+    "notes": []
+  },
+  {
+    "id": "VF-022",
+    "title": "feat(financeiro): registrar receitas e despesas manuais",
+    "milestone": "M3 - Financeiro e indicadores",
+    "labels": [
+      "type:feature",
+      "area:finance",
+      "priority:P0"
+    ],
+    "objective": "Permitir controlar entradas e saídas não originadas automaticamente por vendas.",
+    "acceptance": [
+      "Endpoint cadastra receita ou despesa com categoria compatível.",
+      "Status inicial segue regra baseada em vencimento e data de pagamento.",
+      "Lançamentos podem ser consultados, atualizados dentro das regras e cancelados sem exclusão física.",
+      "Categorias inativas não podem ser usadas em novos lançamentos.",
+      "Validação impede datas e valores incoerentes."
+    ],
+    "depends_on": [
+      "VF-006",
+      "VF-021"
+    ],
+    "notes": []
+  },
+  {
+    "id": "VF-023",
+    "title": "feat(financeiro): integrar lançamentos ao ciclo da venda",
+    "milestone": "M3 - Financeiro e indicadores",
+    "labels": [
+      "type:feature",
+      "area:finance",
+      "priority:P0"
+    ],
+    "objective": "Gerar receita automaticamente na venda e estorno financeiro no cancelamento.",
+    "acceptance": [
+      "Venda concluída gera lançamento financeiro vinculado e com valor idêntico ao total.",
+      "Reprocessamento da mesma venda não duplica receita.",
+      "Cancelamento gera estorno ou cancela a receita conforme regra documentada.",
+      "Venda, estoque e financeiro permanecem consistentes na mesma transação.",
+      "Origem permite navegar do lançamento para a venda relacionada."
+    ],
+    "depends_on": [
+      "VF-019",
+      "VF-021"
+    ],
+    "notes": []
+  },
+  {
+    "id": "VF-024",
+    "title": "feat(financeiro): consultar fluxo de caixa por período",
+    "milestone": "M3 - Financeiro e indicadores",
+    "labels": [
+      "type:feature",
+      "area:finance",
+      "priority:P1"
+    ],
+    "objective": "Apresentar entradas, saídas e saldo financeiro em um intervalo informado.",
+    "acceptance": [
+      "Endpoint aceita data inicial, data final e filtros de status.",
+      "Resposta informa saldo inicial, receitas, despesas, saldo do período e saldo final.",
+      "Critério de caixa ou competência está explicitamente definido.",
+      "Lançamentos cancelados e estornos seguem regra documentada.",
+      "Cálculos possuem testes com valores e datas limítrofes."
+    ],
+    "depends_on": [
+      "VF-022",
+      "VF-023"
+    ],
+    "notes": []
+  },
+  {
+    "id": "VF-025",
+    "title": "feat(indicadores): disponibilizar resumo comercial",
+    "milestone": "M3 - Financeiro e indicadores",
+    "labels": [
+      "type:feature",
+      "area:analytics",
+      "priority:P1"
+    ],
+    "objective": "Converter os dados operacionais em indicadores de gestão comercial.",
+    "acceptance": [
+      "Resumo por período informa faturamento, despesas, saldo, lucro bruto e margem bruta.",
+      "Calcula quantidade vendida, ticket médio, preço médio e produtos mais vendidos.",
+      "Vendas canceladas não contaminam os indicadores.",
+      "Fórmulas e arredondamentos estão documentados.",
+      "Consultas possuem limite temporal e desempenho aceitável para o MVP."
+    ],
+    "depends_on": [
+      "VF-018",
+      "VF-024"
+    ],
+    "notes": []
+  },
+  {
+    "id": "VF-026",
+    "title": "test: configurar testes de integração com Testcontainers",
+    "milestone": "M4 - Qualidade e segurança",
+    "labels": [
+      "type:test",
+      "area:quality",
+      "priority:P0"
+    ],
+    "objective": "Executar testes contra PostgreSQL real e reproduzível, reduzindo diferenças entre teste e produção.",
+    "acceptance": [
+      "Testcontainers inicia PostgreSQL automaticamente na suíte de integração.",
+      "Flyway aplica migrations no container de teste.",
+      "Testes não dependem do Docker Compose de desenvolvimento.",
+      "Dados são isolados entre testes.",
+      "Comando Maven executa testes unitários e de integração de forma previsível."
+    ],
+    "depends_on": [
+      "VF-004",
+      "VF-005"
+    ],
+    "notes": []
+  },
+  {
+    "id": "VF-027",
+    "title": "test: cobrir regras críticas com testes automatizados",
+    "milestone": "M4 - Qualidade e segurança",
+    "labels": [
+      "type:test",
+      "area:quality",
+      "priority:P0"
+    ],
+    "objective": "Proteger o fluxo central contra regressões de estoque, venda e financeiro.",
+    "acceptance": [
+      "Testes cobrem cadastro duplicado, estoque insuficiente, cálculos, transação, cancelamento e idempotência.",
+      "Testes de integração verificam banco, migrations e endpoints principais.",
+      "Cenários felizes e falhas relevantes estão nomeados pelo comportamento esperado.",
+      "Cobertura não depende apenas de percentual; regras P0 possuem testes explícitos.",
+      "Suíte completa passa em ambiente limpo."
+    ],
+    "depends_on": [
+      "VF-009",
+      "VF-012",
+      "VF-016",
+      "VF-019",
+      "VF-023",
+      "VF-026"
+    ],
+    "notes": []
+  },
+  {
+    "id": "VF-028",
+    "title": "docs: documentar a API com OpenAPI e Swagger UI",
+    "milestone": "M4 - Qualidade e segurança",
+    "labels": [
+      "type:docs",
+      "area:quality",
+      "priority:P1"
+    ],
+    "objective": "Tornar os contratos da API compreensíveis e testáveis sem leitura do código-fonte.",
+    "acceptance": [
+      "OpenAPI descreve endpoints, parâmetros, DTOs, status e erros.",
+      "Swagger UI fica disponível no ambiente autorizado.",
+      "Exemplos representam o domínio real do Vincere Flow.",
+      "Campos obrigatórios, formatos e limites são documentados.",
+      "Contrato gerado está alinhado aos testes de integração."
+    ],
+    "depends_on": [
+      "VF-009",
+      "VF-013",
+      "VF-018",
+      "VF-024",
+      "VF-025"
+    ],
+    "notes": []
+  },
+  {
+    "id": "VF-029",
+    "title": "ops: adicionar health checks e logs estruturados",
+    "milestone": "M4 - Qualidade e segurança",
+    "labels": [
+      "type:infra",
+      "area:quality",
+      "priority:P1"
+    ],
+    "objective": "Dar visibilidade sobre saúde, falhas e operações importantes da aplicação.",
+    "acceptance": [
+      "Actuator expõe apenas endpoints necessários.",
+      "Health check diferencia aplicação ativa de aplicação pronta para receber tráfego.",
+      "Logs incluem correlation id, nível, evento e contexto sem dados sensíveis.",
+      "Vendas e cancelamentos registram eventos auditáveis.",
+      "Falhas inesperadas possuem log com contexto suficiente para diagnóstico."
+    ],
+    "depends_on": [
+      "VF-004",
+      "VF-006"
+    ],
+    "notes": []
+  },
+  {
+    "id": "VF-030",
+    "title": "ci: executar build e testes no GitHub Actions",
+    "milestone": "M4 - Qualidade e segurança",
+    "labels": [
+      "type:infra",
+      "area:quality",
+      "priority:P0"
+    ],
+    "objective": "Bloquear integrações que não compilam ou quebram testes.",
+    "acceptance": [
+      "Workflow executa em pull requests e pushes para `main`.",
+      "Pipeline configura Java 21, cache Maven, build e testes.",
+      "Falhas interrompem o workflow com logs claros.",
+      "Artefato JAR pode ser publicado pelo workflow quando o build passa.",
+      "README exibe o status do CI."
+    ],
+    "depends_on": [
+      "VF-026",
+      "VF-027"
+    ],
+    "notes": []
+  },
+  {
+    "id": "VF-031",
+    "title": "security: implementar autenticação e autorização por perfis",
+    "milestone": "M4 - Qualidade e segurança",
+    "labels": [
+      "type:security",
+      "area:security",
+      "priority:P1"
+    ],
+    "objective": "Restringir operações da API a usuários autenticados e perfis autorizados.",
+    "acceptance": [
+      "Usuário possui credencial com hash forte, status e perfil.",
+      "Login emite token com expiração e claims mínimas.",
+      "Perfis iniciais: administrador, gerente e operador.",
+      "Operações sensíveis de ajuste, cancelamento e gestão de usuários exigem permissão adequada.",
+      "Endpoints públicos ficam explicitamente listados.",
+      "Testes cobrem 401, 403 e acessos permitidos."
+    ],
+    "depends_on": [
+      "VF-009",
+      "VF-018",
+      "VF-022"
+    ],
+    "notes": []
+  },
+  {
+    "id": "VF-032",
+    "title": "security: revisar validação, segredos e exposição de dados",
+    "milestone": "M4 - Qualidade e segurança",
+    "labels": [
+      "type:security",
+      "area:security",
+      "priority:P1"
+    ],
+    "objective": "Executar uma revisão defensiva antes da publicação na internet.",
+    "acceptance": [
+      "Nenhum segredo, token ou credencial está versionado ou aparece em logs.",
+      "DTOs evitam mass assignment e exposição de campos internos.",
+      "Entradas possuem limites de tamanho e formato.",
+      "Dependências passam por verificação de vulnerabilidades conhecida.",
+      "CORS, headers e documentação pública seguem configuração intencional.",
+      "Achados e mitigações ficam registrados."
+    ],
+    "depends_on": [
+      "VF-004",
+      "VF-029",
+      "VF-031"
+    ],
+    "notes": []
+  },
+  {
+    "id": "VF-033",
+    "title": "cloud: provisionar PostgreSQL no Azure",
+    "milestone": "M5 - Azure e lançamento",
+    "labels": [
+      "type:infra",
+      "area:azure",
+      "priority:P1"
+    ],
+    "objective": "Criar o banco gerenciado de produção com custo e acesso controlados.",
+    "acceptance": [
+      "Azure Database for PostgreSQL Flexible Server é criado no resource group do projeto.",
+      "Região e camada são compatíveis com o crédito educacional.",
+      "Acesso de rede é restrito ao necessário.",
+      "Usuário da aplicação não possui privilégios administrativos desnecessários.",
+      "Backup, retenção e procedimento de remoção estão documentados.",
+      "Flyway consegue aplicar migrations em ambiente controlado."
+    ],
+    "depends_on": [
+      "VF-005"
+    ],
+    "notes": []
+  },
+  {
+    "id": "VF-034",
+    "title": "cloud: publicar a API no Azure App Service",
+    "milestone": "M5 - Azure e lançamento",
+    "labels": [
+      "type:infra",
+      "area:azure",
+      "priority:P1"
+    ],
+    "objective": "Executar o JAR do Vincere Flow em um serviço gerenciado do Azure.",
+    "acceptance": [
+      "App Service Linux usa runtime Java 21 compatível.",
+      "Aplicação inicia com perfil `prod` e conecta ao PostgreSQL do Azure.",
+      "Health check do App Service aponta para endpoint apropriado.",
+      "HTTPS é obrigatório.",
+      "Plano escolhido respeita o orçamento do Azure educacional.",
+      "Procedimento de deploy manual e rollback está documentado."
+    ],
+    "depends_on": [
+      "VF-030",
+      "VF-033"
+    ],
+    "notes": []
+  },
+  {
+    "id": "VF-035",
+    "title": "cloud: configurar ambiente e segredos de produção",
+    "milestone": "M5 - Azure e lançamento",
+    "labels": [
+      "type:security",
+      "area:azure",
+      "priority:P0"
+    ],
+    "objective": "Configurar produção sem incorporar segredos ao repositório ou ao artefato.",
+    "acceptance": [
+      "URL, usuário e senha do banco são fornecidos por configurações protegidas.",
+      "Chave de assinatura e demais segredos possuem rotação documentada.",
+      "Logs não imprimem valores de configuração sensíveis.",
+      "Configuração de produção usa menor privilégio.",
+      "Checklist confirma que nenhum segredo chegou ao histórico Git."
+    ],
+    "depends_on": [
+      "VF-032",
+      "VF-033",
+      "VF-034"
+    ],
+    "notes": []
+  },
+  {
+    "id": "VF-036",
+    "title": "cd: automatizar deploy no Azure com GitHub Actions",
+    "milestone": "M5 - Azure e lançamento",
+    "labels": [
+      "type:infra",
+      "area:azure",
+      "priority:P1"
+    ],
+    "objective": "Publicar automaticamente uma versão validada após integração na branch principal.",
+    "acceptance": [
+      "Workflow de deploy depende do sucesso do CI.",
+      "Autenticação com Azure evita credenciais permanentes quando possível.",
+      "Deploy identifica commit e versão publicados.",
+      "Falha não substitui uma versão saudável silenciosamente.",
+      "Procedimento de rollback é testado e documentado.",
+      "Secrets do GitHub contêm somente o indispensável."
+    ],
+    "depends_on": [
+      "VF-030",
+      "VF-034",
+      "VF-035"
+    ],
+    "notes": []
+  },
+  {
+    "id": "VF-037",
+    "title": "ops: integrar Application Insights e alertas de custo",
+    "milestone": "M5 - Azure e lançamento",
+    "labels": [
+      "type:infra",
+      "area:azure",
+      "priority:P1"
+    ],
+    "objective": "Monitorar disponibilidade, erros e consumo do crédito Azure.",
+    "acceptance": [
+      "Application Insights recebe telemetria da aplicação.",
+      "Dashboard exibe requisições, latência, falhas e dependência do banco.",
+      "Alertas cobrem indisponibilidade e taxa anormal de erros.",
+      "Budget do Azure possui alertas progressivos antes do esgotamento do crédito.",
+      "Dados sensíveis não aparecem na telemetria.",
+      "Runbook explica como diagnosticar falha de aplicação ou banco."
+    ],
+    "depends_on": [
+      "VF-034",
+      "VF-035"
+    ],
+    "notes": []
+  },
+  {
+    "id": "VF-038",
+    "title": "docs: preparar apresentação de portfólio e dados de demonstração",
+    "milestone": "M5 - Azure e lançamento",
+    "labels": [
+      "type:docs",
+      "area:azure",
+      "priority:P2"
+    ],
+    "objective": "Apresentar o projeto de forma verificável para recrutadores e avaliadores técnicos.",
+    "acceptance": [
+      "README explica problema, arquitetura, stack, regras e como executar.",
+      "Diagrama mostra API, PostgreSQL, GitHub Actions e Azure.",
+      "Coleção HTTP ou Postman demonstra o fluxo principal.",
+      "Dados sintéticos permitem executar uma demonstração sem informações reais.",
+      "Capturas ou GIF mostram cadastro, entrada, venda, financeiro e indicadores.",
+      "Limitações e próximos passos são declarados honestamente."
+    ],
+    "depends_on": [
+      "VF-025",
+      "VF-028",
+      "VF-037"
+    ],
+    "notes": []
+  },
+  {
+    "id": "VF-039",
+    "title": "release: publicar Vincere Flow API v1.0.0",
+    "milestone": "M5 - Azure e lançamento",
+    "labels": [
+      "type:chore",
+      "area:azure",
+      "priority:P2"
+    ],
+    "objective": "Formalizar a primeira versão utilizável e demonstrável do produto.",
+    "acceptance": [
+      "Todas as issues P0 e P1 da versão estão concluídas ou justificadamente removidas do escopo.",
+      "CI e deploy passam a partir de uma tag imutável.",
+      "Release notes descrevem capacidades, limitações e correções.",
+      "Banco possui backup ou procedimento de restauração validado.",
+      "Smoke test confirma os fluxos de produto, estoque, venda, financeiro e indicadores.",
+      "Tag `v1.0.0` e GitHub Release são publicados."
+    ],
+    "depends_on": [
+      "VF-027",
+      "VF-028",
+      "VF-030",
+      "VF-031",
+      "VF-032",
+      "VF-036",
+      "VF-037",
+      "VF-038"
+    ],
+    "notes": []
+  }
+]

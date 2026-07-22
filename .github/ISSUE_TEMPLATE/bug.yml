@@ -1,0 +1,40 @@
+name: Bug
+description: Registrar um comportamento incorreto e reproduzível
+title: "fix: "
+labels:
+  - type:test
+body:
+  - type: textarea
+    id: behavior
+    attributes:
+      label: Comportamento observado
+    validations:
+      required: true
+  - type: textarea
+    id: expected
+    attributes:
+      label: Comportamento esperado
+    validations:
+      required: true
+  - type: textarea
+    id: reproduce
+    attributes:
+      label: Como reproduzir
+      value: |
+        1.
+        2.
+        3.
+    validations:
+      required: true
+  - type: textarea
+    id: evidence
+    attributes:
+      label: Evidências
+      description: Logs sanitizados, payloads, screenshots ou testes falhando.
+  - type: textarea
+    id: impact
+    attributes:
+      label: Impacto
+      description: Quem ou o que é afetado?
+    validations:
+      required: true
