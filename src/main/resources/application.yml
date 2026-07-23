@@ -1,0 +1,22 @@
+spring:
+  application:
+    name: vincere-flow-api
+
+  # SOLUÇÃO TEMPORÁRIA (Issue #1): Exclusão da autoconfiguração de banco de dados
+  # (DataSource, Hibernate JPA e Flyway) para permitir a execução da aplicação e testes de contexto
+  # sem a presença de um banco PostgreSQL ou dependências como H2.
+  # Esta exclusão será removida nas Issues #3/#4 após a configuração de perfis e banco de dados.
+  autoconfigure:
+    exclude:
+      - org.springframework.boot.autoconfigure.jdbc.DataSourceAutoConfiguration
+      - org.springframework.boot.autoconfigure.orm.jpa.HibernateJpaAutoConfiguration
+      - org.springframework.boot.autoconfigure.flyway.FlywayAutoConfiguration
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health
+  endpoint:
+    health:
+      show-details: never
