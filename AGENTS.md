@@ -1,7 +1,7 @@
 # AGENTS.md — Vincere Flow API
 
 Diretriz primária para agentes autônomos e assistentes de IA operando no repositório **Vincere Flow API**.
-Os princípios universais de engenharia, arquitetura e governança são herdados do Antigravity (`GEMINI.md`).
+Os procedimentos universais de engenharia de software (Code-First, Grill-Me, arquitetura, testes, dados e governança) são providos pela Skill Master global `senior-software-engineer` (`C:\Users\vinic\.gemini\config\skills\senior-software-engineer\SKILL.md`).
 
 ---
 
